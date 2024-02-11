@@ -4,6 +4,11 @@ const path = require('path');
 const cors = require('cors')
 const corsOptions = require('./config/corsOption')
 const PORT = process.env.PORT || 3500
+require('dotenv').config();
+const mongoose = require('mongoose');
+const connectDB = require('./config/dbCon');
+
+connectDB();
 
 app.use(cors(corsOptions));
 app.use(express.json());
@@ -24,5 +29,8 @@ app.all('*', (req, res)=>{
     }
 })
 
-app.listen(PORT, ()=> console.log("server running"))
+mongoose.connection.once("open", ()=>{
+    console.log('Connected to database');
+    app.listen(PORT, ()=> console.log("server running"))
+})
 
