@@ -3,7 +3,7 @@ const Schema = mongoose.Schema
 
 const productSchema = new Schema({
     category:{
-        type: mongoose.Schema.type.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "Category"
     },
     title:{
@@ -31,6 +31,16 @@ const productSchema = new Schema({
     price:{
         type: Number,
         required: true
+    },
+    stock:{
+        type: Number,
+        default: true,
+        required: true
+    },
+    createdBy:{
+        type: Schema.Types.ObjectId,
+        required: true,
+        ref: "User"
     },
     discountType:{
         type: String,

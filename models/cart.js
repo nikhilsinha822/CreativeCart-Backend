@@ -5,7 +5,7 @@ const Schema = mongoose.Schema
 const cartSchema = new Schema({
     cartItems:[{
         product:{
-            type: mongoose.type.Schema.ObjectId,
+            type: Schema.Types.ObjectId,
             ref: "Product",
             required: true
         },
@@ -26,12 +26,18 @@ const cartSchema = new Schema({
         },
         quantity:{
             type: Number,
-            validate: (value) => value >= 1,
+            validate:{ 
+                validator: (value) => value >= 1,
+                message: "Quantity cannot be smaller than one"
+            },
             default: 1
         },
         price:{
             type: Number,
-            validate: (value) => value >= 0,
+            validate:{ 
+                validator: (value) => value >= 0,
+                message: "Rating cannot be negative"
+            },
             required: true,
         },
         createdAt:{
@@ -40,14 +46,14 @@ const cartSchema = new Schema({
         }
     }],
     createdBy:{
-        type: mongoose.type.Schema.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "User",
         required: true
     },
     status:{
         type: String,
-        enum: ["Pending", "Confirmed", "Canceled"],
-        default: ["Pending"]
+        enum: ["active", "ordered", "abandonned"],
+        default: ["active"]
     }
 },{timestamps: true})
 

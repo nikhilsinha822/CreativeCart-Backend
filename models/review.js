@@ -14,7 +14,10 @@ const reviewSchema = new Schema({
     },
     rating:{
         type: Number,
-        validate: (value) => value >= 0 && value <=5,
+        validate:{ 
+            validator: (value) => value >= 0 && value <=5,
+            message: "rating must be between 0 and 5"
+        },
         required: true
     },
     comment:{

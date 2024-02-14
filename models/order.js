@@ -12,6 +12,34 @@ const orderSchema = new Schema({
         ref: "Cart",
         required: true
     },
+    shippingInfo: {
+        address: {
+            type: String,
+            required: true,
+        },
+        city: {
+            type: String,
+            required: true,
+        },
+
+        state: {
+            type: String,
+            required: true,
+        },
+
+        country: {
+            type: String,
+            required: true,
+        },
+        pinCode: {
+            type: Number,
+            required: true,
+        },
+        phoneNo: {
+            type: Number,
+            required: true,
+        },
+    },
     paymentInfo: {
         id: {
             type: String,
@@ -46,7 +74,7 @@ const orderSchema = new Schema({
         required: true,
         default: 0,
     },
-    status:{
+    status: {
         type: String,
         enum: ["Pending", "Confirmed", "Canceled"],
         default: ["Pending"]
