@@ -2,19 +2,34 @@ const express = require('express')
 const app =  express();
 const path = require('path');
 const cors = require('cors')
-const corsOptions = require('./config/corsOption')
-const PORT = process.env.PORT || 3500
 require('dotenv').config();
 const mongoose = require('mongoose');
+const PORT = process.env.PORT || 3500
 const connectDB = require('./config/dbCon');
+const fileUpload = require('express-fileupload')
+const cookieParser = require('cookie-parser');
+const corsOptions = require('./config/corsOption')
+const cloudinary = require('cloudinary').v2;
 
 connectDB();
 
 app.use(cors(corsOptions));
+
+app.use(fileUpload());
+app.use(cookieParser());
 app.use(express.json());
+app.use(express.urlencoded({extended: true}));
+
 app.use('/', express.static(path.join(__dirname, 'public')))
 
-app.use('/', require('./routes/root'))
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+})
+
+app.use('/',require('./routes/root'))
+app.use('/auth', require('./routes/authRoutes'))
 
 app.all('*', (req, res)=>{
     res.status(404);

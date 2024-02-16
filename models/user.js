@@ -16,7 +16,7 @@ const userSchema = new Schema({
         required: true
     },
     avatar: {
-        public_id: {
+        publicId: {
           type: String,
           required: true,
         },
@@ -26,12 +26,8 @@ const userSchema = new Schema({
         },
     },
     roles: {
-        User: {
-            type:Number,
-            default: 2001
-        },
-        Editor: Number,
-        Admin: Number
+        type: [String],
+        default: ["Customer"]
     },
     createdAt:{
         type: Date,
@@ -39,4 +35,4 @@ const userSchema = new Schema({
     }
 })
 
-module.exports = mongoose.model(userSchema, 'User')
+module.exports = mongoose.model('User', userSchema)
