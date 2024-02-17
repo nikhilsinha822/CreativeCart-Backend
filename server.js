@@ -30,6 +30,7 @@ cloudinary.config({
 
 app.use('/',require('./routes/root'))
 app.use('/auth', require('./routes/authRoutes'))
+app.use('/category', require('./routes/catRoutes'))
 
 app.all('*', (req, res)=>{
     res.status(404);
