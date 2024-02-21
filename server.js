@@ -10,6 +10,7 @@ const fileUpload = require('express-fileupload')
 const cookieParser = require('cookie-parser');
 const corsOptions = require('./config/corsOption')
 const cloudinary = require('cloudinary').v2;
+const errorMiddleware = require('./middleware/error')
 
 connectDB();
 
@@ -44,6 +45,8 @@ app.all('*', (req, res)=>{
         res.type('.txt').send("404! Not found");
     }
 })
+
+app.use(errorMiddleware);
 
 mongoose.connection.once("open", ()=>{
     console.log('Connected to database');
