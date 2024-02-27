@@ -1,0 +1,25 @@
+const catchAsyncError = require('./catchAsyncError')
+const ErrorHandler = require('../utils/ErrorHandler')
+const jwt = require('jsonwebtoken')
+const User = require('../models/user')
+
+
+const verifyJWT = catchAsyncError(async (req, res, next) => {
+    const authUser = req?.headers?.Authorization || req?.headers?.authorization
+
+    if(!authUser?.startsWith('Bearer '))
+        return next(new ErrorHandler("Please login again", 401))
+    
+    const token = authUser.split(' ')[1];
+
+    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
+
+    if(!decoded) return next(new ErrorHandler("Unauthorized", 401))
+    req.user = await User.findOne({email: decoded.userInfo.email})
+    // console.log(req.user)
+    next();
+})
+
+module.exports = {
+    verifyJWT
+}

@@ -4,7 +4,8 @@ const Schema = mongoose.Schema
 const productSchema = new Schema({
     category:{
         type: Schema.Types.ObjectId,
-        ref: "Category"
+        ref: "Category",
+        required: true
     },
     title:{
         type: String,
@@ -51,5 +52,7 @@ const productSchema = new Schema({
         type: Number
     },
 },{timestamps: true})
+
+productSchema.index({title: 'text', desc: 'text'})
 
 module.exports = mongoose.model("Product", productSchema)
