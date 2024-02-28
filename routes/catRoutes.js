@@ -1,12 +1,16 @@
-const express = require('express')
+const express = require('express');
 const router = express.Router();
-const categoryController = require('../controller/categoryController')
+const { getCategory,
+    createCategory,
+    updateCategory 
+} = require('../controller/categoryController');
+const { verifyJWT } = require('../middleware/auth');
 
 router.route('/category')
-    .get(categoryController.getCategory)
+    .get(getCategory)
 
 router.route('/admin/category')
-    .post(categoryController.createCategory)
-    .put(categoryController.updateCategory)
+    .post(verifyJWT, createCategory)
+    .put(verifyJWT, updateCategory)
 
-module.exports = router
+module.exports = router;
