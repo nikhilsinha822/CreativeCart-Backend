@@ -10,7 +10,7 @@ const cartSchema = new Schema({
             required: true
         },
         variations:{
-            image: {
+            image: [{
                 publicId: {
                     type: String,
                     required: true,
@@ -19,7 +19,7 @@ const cartSchema = new Schema({
                     type: String,
                     required: true,
                 }
-            },
+            }],
             size: {
                type: Number, 
             }
@@ -31,14 +31,6 @@ const cartSchema = new Schema({
                 message: "Quantity cannot be smaller than one"
             },
             default: 1
-        },
-        price:{
-            type: Number,
-            validate:{ 
-                validator: (value) => value >= 0,
-                message: "Rating cannot be negative"
-            },
-            required: true,
         },
         createdAt:{
             type: Date,
@@ -53,7 +45,7 @@ const cartSchema = new Schema({
     status:{
         type: String,
         enum: ["active", "ordered", "abandonned"],
-        default: ["active"]
+        default: "active"
     }
 },{timestamps: true})
 
