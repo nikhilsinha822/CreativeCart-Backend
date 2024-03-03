@@ -22,15 +22,18 @@ const getAllProducts = catchAsyncError(async (req, res) => {
     const apiFeature = new ApiFeatures(Product.find(), req.query)
         .search().filter().pagination();
 
-    // let products = await apiFeature.query
-    // const matchedProducts = products.length;
-    // const matchedProducts = await Product.countDocuments(apiFeature.query.searx);
+    const matchedProducts = await new ApiFeatures(Product.find(), req.query)
+        .search().filter().query.countDocuments()
+    
+    const matchedPages = Math.ceil(matchedProducts/req.query.pageSize);
 
     const products = await apiFeature.query
 
     res.status(200).json({
         success: true,
         totalProducts,
+        matchedPages,
+        matchedProducts,
         page: req.query.page || 1,
         pageSize: req.query.pageSize || 10,
         data: products
