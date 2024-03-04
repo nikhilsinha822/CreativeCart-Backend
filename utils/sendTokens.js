@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken')
 
 const sendTokens = (res, email, roles) => {
     const accessToken = jwt.sign({
-        "UserInfo": {
+        "userInfo": {
             "email": email,
             "roles": roles
         }
