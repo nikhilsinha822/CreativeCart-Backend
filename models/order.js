@@ -43,41 +43,23 @@ const orderSchema = new Schema({
     paymentInfo: {
         id: {
             type: String,
-            required: true
         },
         status: {
             type: String,
-            required: true
         }
     },
-    paidAt: {
-        type: Date,
-        required: true
-    },
-    itemsPrice: {
-        type: Number,
-        required: true,
-        default: 0,
-    },
-    taxPrice: {
-        type: Number,
-        required: true,
-        default: 0,
-    },
-    shippingPrice: {
-        type: Number,
-        required: true,
-        default: 0,
-    },
-    totalPrice: {
-        type: Number,
-        required: true,
-        default: 0,
-    },
+    paidAt: Date,
+
+    subTotal: Number,
+
+    totalSavings: Number,
+
+    finalPrice: Number,
+
     status: {
         type: String,
-        enum: ["Pending", "Confirmed", "Canceled"],
-        default: ["Pending"]
+        enum: ["Pending", "Confirmed", "Canceled", "Delivered"],
+        default: "Pending"
     },
     deliveredAt: Date,
     createdAt: {
