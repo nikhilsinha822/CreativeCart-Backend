@@ -13,22 +13,27 @@ const finalCost = async (cartItems) => {
         finalPrice: subTotal - totalSavings,
     }
 }
+
+const updateStocks = async (cartItems) => {
+    await Promise.all(cartItems.map(async (item) => {
+        const product = await Product.findById(item.product);
+        product.stock -= item.quantity;
+        product.save();
+    }))
+}
+
 const costPrice = async (productID) => {
     let price = 0, discount = 0;
-
     const product = await Product.findById(productID);
-
     price += product.price;
-
-    if (product.discountType === "amount") {
+    if (product.discountType === "amount")
         discount += product.discountValue;
-    } else if (product.discountType === "percent") {
+    else if (product.discountType === "percent")
         discount += (product.discountValue * price) / 100;
-    }
-
     return { price, discount };
 }
 
 module.exports = {
-    finalCost
+    finalCost,
+    updateStocks
 }
