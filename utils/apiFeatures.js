@@ -5,6 +5,7 @@ class ApiFeatures {
     }
 
     search(){
+        if(!this.queryStr.search) return this;
         const search = this.queryStr.search ? {
             $text: {
                 $search: this.queryStr.search
