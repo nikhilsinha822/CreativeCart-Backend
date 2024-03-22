@@ -5,7 +5,8 @@ const { userLogin,
     userLogout,
     updateUser,
     userRegister,
-    getUserDetails
+    getUserDetails,
+    validateUser
 } = require('../controller/authController');
 const {verifyJWT} = require('../middleware/auth')
 
@@ -14,6 +15,8 @@ router.route('/register').post(userRegister)
 router.route('/login').post(userLogin)
 
 router.route('/refresh').post(refresh)
+
+router.route('/validate').get(verifyJWT, validateUser)
 
 router.route('/profile/me')
     .get(verifyJWT, getUserDetails)

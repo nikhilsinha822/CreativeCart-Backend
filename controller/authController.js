@@ -73,6 +73,10 @@ const refresh = catchAsyncError(async (req, res, next) => {
     res.status(200).json({ accessToken });
 })
 
+const validateUser = catchAsyncError((req,res) => {
+    res.status(200).json({message: 'Authorized'});
+})
+
 const userLogout = catchAsyncError((req, res) => {
     if (!req?.cookies?.jwt) return res.sendStatus(204);
     res.clearCookie('jwt', {
@@ -114,5 +118,6 @@ module.exports = {
     userLogout,
     updateUser,
     userRegister,
+    validateUser,
     getUserDetails
 }
