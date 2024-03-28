@@ -7,8 +7,9 @@ const { uploadSingleImage, deleteSingleImage } = require('../utils/imageHandler'
 const {sendTokens} = require('../utils/sendTokens')
 
 const userRegister = catchAsyncError(async (req, res, next) => {
-    if (!req?.files)
-        return next(new ErrorHandler("Avatar is missing", 400));
+
+    if (!req?.files?.avatar || !req?.files?.avatar?.mimetype?.startsWith('image'))
+        return next(new ErrorHandler("Avatar is missing or not valid image", 400));
 
     const { email, password, name, roles } = req?.body;
     if (!email || !password || !name)
@@ -99,7 +100,7 @@ const updateUser = catchAsyncError(async(req, res, next) => {
     const user = await User.findById(req.user._id);
     const {email, name} = req.body;
 
-    if(req?.files?.avatar){
+    if(req?.files?.avatar || req?.files?.avatar?.mimetype?.startsWith('image')){
         await deleteSingleImage(user.avatar);
         const avatar = await uploadSingleImage(req.files.avatar);
         user.avatar = avatar
