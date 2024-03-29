@@ -21,6 +21,18 @@ const productSchema = new Schema({
             required: true
         }
     }],
+    rating:{
+        stars:{
+            type: Number,
+            default: 0,
+            required: true
+        },
+        numReviews:{
+            type: Number,
+            default: 0,
+            required: true
+        }
+    },
     summary:{
         type: String,
         required: true

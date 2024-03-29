@@ -36,6 +36,7 @@ app.use('/api/v1', require('./routes/productRoutes'))
 app.use('/api/v1', require('./routes/cartRoutes'))
 app.use('/api/v1', require('./routes/orderRoutes'))
 app.use('/api/v1', require('./routes/paymentRoutes'))
+app.use('/api/v1', require('./routes/reviewRoutes'))
 
 app.all('*', (req, res)=>{
     res.status(404);
