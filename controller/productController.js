@@ -19,13 +19,14 @@ const getProductDetails = catchAsyncError(async (req, res, next) => {
 
 const getAllProducts = catchAsyncError(async (req, res) => {
     const totalProducts = await Product.countDocuments();
+    const pageSize = req.query.pageSize || 10;
     const apiFeature = new ApiFeatures(Product.find(), req.query)
         .search().filter().pagination();
 
     const matchedProducts = await new ApiFeatures(Product.find(), req.query)
         .search().filter().query.countDocuments()
     
-    const matchedPages = Math.ceil(matchedProducts/req.query.pageSize);
+    const matchedPages = Math.ceil(matchedProducts/pageSize);
 
     const products = await apiFeature.query
 
