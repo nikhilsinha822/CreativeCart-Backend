@@ -1,0 +1,29 @@
+# Exported from Render on 2024-03-29T10:24:07Z
+services:
+- type: web
+  name: CreativeCart-Backend
+  runtime: node
+  repo: https://github.com/nikhilsinha822/CreativeCart-Backend
+  branch: main
+  plan: free
+  envVars:
+  - key: RAZORPAY_KEY_SECRET
+    sync: false
+  - key: RAZORPAY_KEY_ID
+    sync: false
+  - key: ACCESS_TOKEN_SECRET
+    sync: false
+  - key: REFRESH_TOKEN_SECRET
+    sync: false
+  - key: CLOUDINARY_API_SECRET
+    sync: false
+  - key: CLOUDINARY_API_KEY
+    sync: false
+  - key: CLOUDINARY_CLOUD_NAME
+    sync: false
+  - key: DATABASE_URI
+    sync: false
+  region: singapore
+  buildCommand: npm install
+  startCommand: npm start
+version: "1"
