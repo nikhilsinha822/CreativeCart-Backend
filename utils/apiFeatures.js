@@ -31,8 +31,8 @@ class ApiFeatures {
     }
 
     pagination(){
-        const page = this.queryStr.page || 1;
-        const pageSize = this.queryStr.pageSize || 10;
+        const page = Number(this.queryStr.page) || 1;
+        const pageSize = Number(this.queryStr.pageSize) || 10;
 
         this.query = this.query.limit(pageSize).skip((page-1) * pageSize);
 

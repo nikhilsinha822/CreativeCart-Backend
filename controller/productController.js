@@ -19,7 +19,8 @@ const getProductDetails = catchAsyncError(async (req, res, next) => {
 
 const getAllProducts = catchAsyncError(async (req, res) => {
     const totalProducts = await Product.countDocuments();
-    const pageSize = req.query.pageSize || 10;
+    const pageSize = Number(req.query.pageSize) || 10;
+    const page = Number(req.query.page) || 1;
     const apiFeature = new ApiFeatures(Product.find(), req.query)
         .search().filter().pagination();
 
@@ -35,8 +36,8 @@ const getAllProducts = catchAsyncError(async (req, res) => {
         totalProducts,
         matchedPages,
         matchedProducts,
-        page: req.query.page || 1,
-        pageSize: req.query.pageSize || 10,
+        page,
+        pageSize,
         data: products
     })
 })
