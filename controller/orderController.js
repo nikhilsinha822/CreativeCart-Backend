@@ -21,6 +21,7 @@ const createOrder = catchAsyncError(async (req, res, next) => {
         shippingInfo,
         user: req.user._id,
     })
+    await cart.save();
 
     res.status(200).json({
         success: true,
@@ -52,6 +53,8 @@ const getOrder = catchAsyncError(async (req, res, next) => {
         return next(new ErrorHandler("Cart with the given ID not found or is empty", 404));
 
     const pricing = await finalCost(cart.cartItems);
+
+    await cart.save();
 
     res.status(200).json({
         success: true,

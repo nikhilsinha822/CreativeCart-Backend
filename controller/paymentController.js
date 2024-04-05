@@ -17,6 +17,8 @@ const paymentInit = catchAsyncError(async (req, res) => {
 
     const pricing = await finalCost(cart.cartItems);
 
+    await cart.save();
+
     const response = await instance.orders.create({
         amount: pricing.finalPrice * 100,
         currency: 'INR',

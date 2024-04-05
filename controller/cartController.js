@@ -19,10 +19,16 @@ const createUserCart = catchAsyncError(async (req, res) => {
 
     let subTotal = 0, totalSavings = 0;
     await Promise.all(cartItems.map(async (item) => {
-        const { price, discount } = await costPrice(item.product);
-        subTotal += price*item.quantity;
-        totalSavings += discount*item.quantity;
+        const response = await costPrice(item.product);
+        if (!response) {
+            cart.cartItems = cart.cartItems.filter((cartItem) => cartItem.product !== item.product);
+        } else {
+            const { price, discount } = response;
+            subTotal += price * item.quantity;
+            totalSavings += discount * item.quantity;
+        }
     }))
+    await cart.save();
 
     res.status(200).json({
         success: true,
@@ -52,9 +58,14 @@ const updateUserCart = catchAsyncError(async (req, res, next) => {
 
     let subTotal = 0, totalSavings = 0;
     await Promise.all(cartItems.map(async (item) => {
-        const { price, discount } = await costPrice(item.product);
-        subTotal += price*item.quantity;
-        totalSavings += discount*item.quantity;
+        const response = await costPrice(item.product);
+        if (!response) {
+            cart.cartItems = cart.cartItems.filter((cartItem) => cartItem.product !== item.product);
+        } else {
+            const { price, discount } = response;
+            subTotal += price * item.quantity;
+            totalSavings += discount * item.quantity;
+        }
     }));
 
     res.status(200).json({
@@ -90,10 +101,17 @@ const getUserCart = catchAsyncError(async (req, res, next) => {
 
     let subTotal = 0, totalSavings = 0;
     await Promise.all(cart[0].cartItems.map(async (item) => {
-        const { price, discount } = await costPrice(item.product);
-        subTotal += price*item.quantity;
-        totalSavings += discount*item.quantity;
+        const response = await costPrice(item.product);
+        if (!response) {
+            cart[0].cartItems = cart[0].cartItems.filter((cartItem) => cartItem.product !== item.product);
+        }
+        else {
+            const { price, discount } = response;
+            subTotal += price * item.quantity;
+            totalSavings += discount * item.quantity;
+        }
     }));
+    await cart[0].save();
 
     res.status(200).json({
         success: true,
@@ -108,6 +126,9 @@ const costPrice = async (productID) => {
     let price = 0, discount = 0;
 
     const product = await Product.findById(productID);
+
+    if (!product)
+        return null;
 
     price += product.price;
 
