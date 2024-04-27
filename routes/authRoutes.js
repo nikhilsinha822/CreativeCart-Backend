@@ -6,7 +6,9 @@ const { userLogin,
     updateUser,
     userRegister,
     getUserDetails,
-    validateUser
+    validateUser,
+    forgotPassword,
+    resetPassword
 } = require('../controller/authController');
 const {verifyJWT} = require('../middleware/auth')
 
@@ -17,6 +19,10 @@ router.route('/login').post(userLogin)
 router.route('/refresh').post(refresh)
 
 router.route('/validate').get(verifyJWT, validateUser)
+
+router.route('/forgotpassword').post(forgotPassword)
+
+router.route('/resetpassword/:resetToken').put(resetPassword)
 
 router.route('/profile/me')
     .get(verifyJWT, getUserDetails)
