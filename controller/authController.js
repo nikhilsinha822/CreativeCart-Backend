@@ -161,7 +161,7 @@ const getUserDetails = catchAsyncError(async (req, res) => {
 
 const updateUser = catchAsyncError(async (req, res, next) => {
     const user = await User.findById(req.user._id);
-    const { email, name } = req.body;
+    const { email, name, shippingInfo } = req.body;
 
     if (req?.files?.avatar || req?.files?.avatar?.mimetype?.startsWith('image')) {
         await deleteSingleImage(user.avatar);
@@ -170,7 +170,7 @@ const updateUser = catchAsyncError(async (req, res, next) => {
     };
     user.email = email || user.email
     user.name = name || user.name
-
+    user.shippingInfo = shippingInfo || user.shippingInfo
     await user.save()
 
     sendTokens(res, user.email, user.roles)
