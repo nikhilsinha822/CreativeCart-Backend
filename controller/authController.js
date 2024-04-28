@@ -32,7 +32,7 @@ const userRegister = catchAsyncError(async (req, res, next) => {
 
     const user = await User.create(userObj);
 
-    sendTokens(res, user.email, user.roles);
+    sendTokens(res, user.email, user.roles, user._id);
 })
 
 const userLogin = catchAsyncError(async (req, res, next) => {
@@ -49,7 +49,7 @@ const userLogin = catchAsyncError(async (req, res, next) => {
     if (!pass)
         return next(new ErrorHandler("Unauthorized", 401))
 
-    sendTokens(res, user.email, user.roles)
+    sendTokens(res, user.email, user.roles, user._id)
 })
 
 const refresh = catchAsyncError(async (req, res, next) => {
@@ -173,7 +173,10 @@ const updateUser = catchAsyncError(async (req, res, next) => {
     user.shippingInfo = shippingInfo || user.shippingInfo
     await user.save()
 
-    sendTokens(res, user.email, user.roles)
+    res.status(200).json({
+        success: true,
+        message: 'User updated'
+    })
 })
 
 module.exports = {

@@ -1,8 +1,9 @@
 const jwt = require('jsonwebtoken')
 
-const sendTokens = (res, email, roles) => {
+const sendTokens = (res, email, roles, userId) => {
     const accessToken = jwt.sign({
         "userInfo": {
+            "userId": userId,
             "email": email,
             "roles": roles
         }
@@ -11,6 +12,7 @@ const sendTokens = (res, email, roles) => {
         { expiresIn: '1d' });
 
     const refreshToken = jwt.sign({
+        userId,
         "email": email
     },
         process.env.REFRESH_TOKEN_SECRET,
