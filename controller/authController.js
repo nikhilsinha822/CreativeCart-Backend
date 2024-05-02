@@ -67,6 +67,7 @@ const refresh = catchAsyncError(async (req, res, next) => {
 
     const accessToken = jwt.sign({
         "userInfo": {
+            "userId": user._id,
             "email": user.email,
             "roles": user.roles
         }
