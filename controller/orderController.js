@@ -41,27 +41,18 @@ const getMyOrders = catchAsyncError(async (req, res) => {
 })
 
 const getOrder = catchAsyncError(async (req, res, next) => {
-    const order = await Order.findById(req.params.id);
+    const order = await Order.findById(req.params.id).lean().exec();
 
-    const cartId = order.cart;
+    if (!order)
+        return next(new ErrorHandler("Order not found", 404));
 
-    if(req.user._id.toString() !== order.user.toString())
-        return next(new ErrorHandler("Forbidden", 403));
+    const cart = await Cart.findById(order.cart).lean().exec();
 
-    const cart = await Cart.findById(cartId);
-    if (!cart?.cartItems?.length)
-        return next(new ErrorHandler("Cart with the given ID not found or is empty", 404));
-
-    const pricing = await finalCost(cart.cartItems);
-
-    await cart.save();
+    order.cart = cart;
 
     res.status(200).json({
         success: true,
-        data: {
-            order, 
-            pricing
-        }
+        data: order
     })
 })
 

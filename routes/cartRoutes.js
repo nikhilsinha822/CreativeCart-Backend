@@ -3,7 +3,8 @@ const { verifyJWT } = require('../middleware/auth');
 const { getUserCart,
     createUserCart,
     updateUserCart,
-    deleteUserCart
+    deleteUserCart,
+    getCartData
 } = require('../controller/cartController');
 const router = express.Router();
 
@@ -12,6 +13,7 @@ router.route("/cart")
     .post(verifyJWT, createUserCart)
 
 router.route("/cart/:id")
+    .get(verifyJWT, getCartData)
     .put(verifyJWT, updateUserCart)
     .delete(verifyJWT, deleteUserCart)
 

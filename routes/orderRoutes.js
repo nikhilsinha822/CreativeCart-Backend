@@ -8,7 +8,7 @@ router.route('/order')
     .post(verifyJWT, createOrder)
 
 router.route('/order/:id')
-    .get(verifyJWT, getOrder)
+    .get(getOrder)
 
 router.route('/admin/order')
     .put(verifyJWT, updateStatus)

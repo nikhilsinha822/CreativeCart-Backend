@@ -39,6 +39,39 @@ const createUserCart = catchAsyncError(async (req, res) => {
     });
 });
 
+const getCartData = catchAsyncError(async (req, res, next) => {
+    const cartId = req.params.id;
+    if (!cartId)
+        return next(new ErrorHandler("Id is required", 404));
+
+    const cart = await Cart.findById(cartId);
+    if (!cart)
+        return next(new ErrorHandler("Cart is not found", 404));
+
+    if (cart.createdBy.toString() !== req.user._id.toString())
+        return next(new ErrorHandler("Forbidden", 403))
+
+    let subTotal = 0, totalSavings = 0;
+    await Promise.all(cart.cartItems.map(async (item) => {
+        const response = await costPrice(item.product);
+        if (!response) {
+            cart.cartItems = cart.cartItems.filter((cartItem) => cartItem.product !== item.product);
+        } else {
+            const { price, discount } = response;
+            subTotal += price * item.quantity;
+            totalSavings += discount * item.quantity;
+        }
+    }));
+
+    res.status(200).json({
+        success: true,
+        subTotal,
+        totalSavings,
+        finalprice: subTotal - totalSavings,
+        data: cart
+    })
+})
+
 const updateUserCart = catchAsyncError(async (req, res, next) => {
     const cartId = req.params.id;
     if (!cartId)
@@ -146,4 +179,5 @@ module.exports = {
     updateUserCart,
     deleteUserCart,
     getUserCart,
+    getCartData
 }
