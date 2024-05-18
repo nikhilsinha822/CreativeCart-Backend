@@ -8,9 +8,12 @@ const { userLogin,
     getUserDetails,
     validateUser,
     forgotPassword,
-    resetPassword
+    resetPassword,
+    getUserList,
+    updateUserRole,
+    deleteUser
 } = require('../controller/authController');
-const {verifyJWT} = require('../middleware/auth')
+const { verifyJWT, verifyRoles } = require('../middleware/auth')
 
 router.route('/register').post(userRegister)
 
@@ -29,5 +32,11 @@ router.route('/profile/me')
     .put(verifyJWT, updateUser)
 
 router.route('/logout').post(userLogout)
+
+router.route('/admin/users').get(verifyJWT, verifyRoles('Admin'), getUserList)
+
+router.route('/admin/user/:id')
+    .put(verifyJWT, verifyRoles('Admin'), updateUserRole)
+    .delete(verifyJWT, verifyRoles('Admin'), deleteUser)
 
 module.exports = router;

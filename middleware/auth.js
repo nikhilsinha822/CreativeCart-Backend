@@ -19,6 +19,16 @@ const verifyJWT = catchAsyncError(async (req, res, next) => {
     next();
 })
 
+const verifyRoles = (role) => {
+    return (req, res, next) => {
+        if (!req.user.roles.includes(role)) {
+            return next(new ErrorHandler("You are not authorized to access this route", 403))
+        }
+        next();
+    }
+}
+
 module.exports = {
-    verifyJWT
+    verifyJWT,
+    verifyRoles
 }

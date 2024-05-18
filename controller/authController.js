@@ -180,6 +180,54 @@ const updateUser = catchAsyncError(async (req, res, next) => {
     })
 })
 
+const getUserList = catchAsyncError(async (req, res) => {
+    const users = await User.find().select('-password').lean().exec();
+
+    const data = users.filter(user => user.email !== req.user.email);
+
+    res.status(200).json({
+        success: true,
+        data
+    })
+})
+
+const updateUserRole = catchAsyncError(async (req, res, next) => {
+    if(!req.params.id || !req.body.roles)
+        return next(new ErrorHandler("Invalid Request", 400));
+
+    const user = await User.findById(req.params.id);
+
+    const roles = ['Customer', 'Merchant', 'Admin'];
+    const validRoles = req.body.roles.every(role => roles.includes(role));
+
+    if(!validRoles)
+        return next(new ErrorHandler("Invalid Role", 400));
+
+    user.roles = req.body.roles;
+    await user.save();
+    res.status(200).json({
+        success: true,
+        message: 'Role updated'
+    })  
+})
+
+const deleteUser = catchAsyncError(async (req, res, next) => {
+    if(!req.params.id)
+        return next(new ErrorHandler("Invalid Request", 400));
+
+    if((req.user._id).toString() === req.params.id)
+        return next(new ErrorHandler("You can't delete yourself", 403));
+
+    const user = await User.findById(req.params.id);
+    await deleteSingleImage(user.avatar);
+    await user.deleteOne();
+
+    res.status(200).json({
+        success: true,
+        message: 'User deleted'
+    })
+})
+
 module.exports = {
     userLogin,
     refresh,
@@ -189,5 +237,8 @@ module.exports = {
     validateUser,
     getUserDetails,
     forgotPassword,
-    resetPassword
+    resetPassword,
+    getUserList,
+    updateUserRole,
+    deleteUser
 }
