@@ -1,5 +1,5 @@
 const express = require('express');
-const { verifyJWT } = require('../middleware/auth');
+const { verifyJWT, verifyRoles } = require('../middleware/auth');
 const { createOrder, getMyOrders, getOrder, updateStatus } = require('../controller/orderController');
 const router = express.Router();
 
@@ -11,6 +11,6 @@ router.route('/order/:id')
     .get(getOrder)
 
 router.route('/admin/order')
-    .put(verifyJWT, updateStatus)
+    .put(verifyJWT, verifyRoles('Admin'), updateStatus)
 
 module.exports = router
