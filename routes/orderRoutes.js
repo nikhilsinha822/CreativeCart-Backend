@@ -11,6 +11,6 @@ router.route('/order/:id')
     .get(getOrder)
 
 router.route('/admin/order')
-    .put(verifyJWT, verifyRoles('Admin'), updateStatus)
+    .put(verifyJWT, verifyRoles(['Admin']), updateStatus)
 
 module.exports = router

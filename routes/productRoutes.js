@@ -7,17 +7,17 @@ const { createProduct,
     getAllProducts,
     getProductDetails
 } = require('../controller/productController')
-const { verifyJWT } = require('../middleware/auth')
+const { verifyJWT, verifyRoles } = require('../middleware/auth')
 
 router.route("/admin/product/new")
-    .post(verifyJWT, createProduct)
+    .post(verifyJWT, verifyRoles(['Admin']), createProduct)
 
 router.route("/admin/product/:id")
-    .put(verifyJWT, updateProduct)
-    .delete(verifyJWT, deleteProduct)
+    .put(verifyJWT, verifyRoles(['Admin']), updateProduct)
+    .delete(verifyJWT, verifyRoles(['Admin']), deleteProduct)
 
 router.route("/admin/product")
-    .get(verifyJWT, getAdminProducts)
+    .get(verifyJWT, verifyRoles(['Admin']), getAdminProducts)
 
 router.route("/product")
     .get(getAllProducts)

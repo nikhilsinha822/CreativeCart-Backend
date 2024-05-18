@@ -33,10 +33,10 @@ router.route('/profile/me')
 
 router.route('/logout').post(userLogout)
 
-router.route('/admin/users').get(verifyJWT, verifyRoles('Admin'), getUserList)
+router.route('/admin/users').get(verifyJWT, verifyRoles(['Admin']), getUserList)
 
 router.route('/admin/user/:id')
-    .put(verifyJWT, verifyRoles('Admin'), updateUserRole)
-    .delete(verifyJWT, verifyRoles('Admin'), deleteUser)
+    .put(verifyJWT, verifyRoles(['Admin']), updateUserRole)
+    .delete(verifyJWT, verifyRoles(['Admin']), deleteUser)
 
 module.exports = router;
