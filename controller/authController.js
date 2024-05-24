@@ -74,7 +74,7 @@ const refresh = catchAsyncError(async (req, res, next) => {
     }, process.env.ACCESS_TOKEN_SECRET,
         { expiresIn: '1d' });
 
-    res.status(200).json({ accessToken });
+    res.status(200).json({ accessToken, roles: user.roles});
 })
 
 const forgotPassword = catchAsyncError(async (req, res, next) => {

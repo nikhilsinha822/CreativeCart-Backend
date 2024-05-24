@@ -9,7 +9,7 @@ const sendTokens = (res, email, roles, userId) => {
         }
     },
         process.env.ACCESS_TOKEN_SECRET,
-        { expiresIn: '1d' });
+        { expiresIn: 5 });
 
     const refreshToken = jwt.sign({
         userId,
@@ -25,7 +25,7 @@ const sendTokens = (res, email, roles, userId) => {
         maxAge: 7 * 24 * 60 * 60 * 1000,
     })
     
-    res.json({ accessToken });
+    res.json({ accessToken, roles });
 }
 
 module.exports = {
