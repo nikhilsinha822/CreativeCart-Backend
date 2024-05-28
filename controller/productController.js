@@ -3,6 +3,7 @@ const catchAsyncError = require('../middleware/catchAsyncError')
 const ErrorHandler = require('../utils/ErrorHandler')
 const { uploadImagesArray, deleteImageArray } = require('../utils/imageHandler')
 const ApiFeatures = require('../utils/apiFeatures')
+const product = require('../models/product')
 
 const getProductDetails = catchAsyncError(async (req, res, next) => {
     const { id } = req.params;
@@ -26,8 +27,8 @@ const getAllProducts = catchAsyncError(async (req, res) => {
 
     const matchedProducts = await new ApiFeatures(Product.find(), req.query)
         .search().filter().query.countDocuments()
-    
-    const matchedPages = Math.ceil(matchedProducts/pageSize);
+
+    const matchedPages = Math.ceil(matchedProducts / pageSize);
 
     const products = await apiFeature.query
 
@@ -47,6 +48,17 @@ const createProduct = catchAsyncError(async (req, res, next) => {
     if (!req?.files?.images.length)
         return next(new ErrorHandler("Images are missing", 400));
 
+    const { price, discountType, discountValue } = req.body;
+
+    if (discountType === "percent" && discountValue > 100)
+        return next(new ErrorHandler("Discount value cannot be greater than 100%", 400));
+    if (discountType === "amount" && discountValue > Number(price))
+        return next(new ErrorHandler("Discount value cannot be greater than price", 400));
+    if (discountType === "none")
+        req.body.discountValue = 0;
+    if (price <= 0)
+        return next(new ErrorHandler("Price cannot be less than or equal to 0", 400));
+
     const images = await uploadImagesArray(req.files.images)
 
     req.body.createdBy = req.user._id
@@ -56,6 +68,7 @@ const createProduct = catchAsyncError(async (req, res, next) => {
     if (response)
         return res.status(201).json({
             success: true,
+            product: response._id.toString(),
             message: "Sucessfully added"
         });
 })
@@ -76,10 +89,10 @@ const updateProduct = catchAsyncError(async (req, res, next) => {
     const productId = req.params.id;
     let product = await Product.findById(productId)
 
-    if(!product){
+    if (!product) {
         return next(new ErrorHandler("Product doesnot exist", 404))
     }
-    if (req?.files?.images.length){
+    if (req?.files?.images.length) {
         await deleteImageArray(product.images)
         product.images = await uploadImagesArray(req.files.images)
     }
@@ -89,7 +102,7 @@ const updateProduct = catchAsyncError(async (req, res, next) => {
         runValidators: true,
         useFindAndModify: false,
     });
-    
+
     res.status(200).json({
         success: true,
         data,
@@ -99,7 +112,7 @@ const updateProduct = catchAsyncError(async (req, res, next) => {
 const deleteProduct = catchAsyncError(async (req, res, next) => {
     const productId = req.params.id
     const product = await Product.findById(productId)
-    if(!product){
+    if (!product) {
         return next(new ErrorHandler("Product doesnot exist", 404))
     }
     await deleteImageArray(product.images)
