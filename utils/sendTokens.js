@@ -9,7 +9,7 @@ const sendTokens = (res, email, roles, userId) => {
         }
     },
         process.env.ACCESS_TOKEN_SECRET,
-        { expiresIn: 5 });
+        { expiresIn: '1d' });
 
     const refreshToken = jwt.sign({
         userId,
