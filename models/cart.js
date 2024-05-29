@@ -44,7 +44,7 @@ const cartSchema = new Schema({
     },
     status:{
         type: String,
-        enum: ["active", "ordered", "abandonned"],
+        enum: ["active", "ordered", "abandonned", "archived"],
         default: "active"
     }
 },{timestamps: true})

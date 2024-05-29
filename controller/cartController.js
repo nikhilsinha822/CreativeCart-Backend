@@ -155,6 +155,29 @@ const getUserCart = catchAsyncError(async (req, res, next) => {
     })
 });
 
+const directBuyProduct = catchAsyncError(async (req, res, next) => {
+    if(!req.body.product)
+        return next(new ErrorHandler("Product Id is required", 400));
+
+    const product = await Product.findById(req.body.product);
+
+    if(!product)
+        return next(new ErrorHandler("Product not found", 404));
+
+    const cart = await Cart.create({
+        cartItems:[{
+            product: req.body.product
+        }],
+        status: "archived",
+        createdBy: req.user._id
+    })
+
+    res.status(200).json({
+        success: true,
+        data: cart
+    })
+})
+
 const costPrice = async (productID) => {
     let price = 0, discount = 0;
 
@@ -179,5 +202,6 @@ module.exports = {
     updateUserCart,
     deleteUserCart,
     getUserCart,
-    getCartData
+    getCartData,
+    directBuyProduct
 }
